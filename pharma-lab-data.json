@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "description": "Virtual Pharma Lab - IV pump simulator, powder reconstitution, alligation, compounding scenarios",
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "IV Drip Rate Calculation",
+      "description": "Prepare an IV infusion of Normal Saline 1000mL to run over 8 hours. Drop factor: 15 drops/mL.",
+      "inputs": [
+        {"label": "Volume (mL)", "value": 1000, "unit": "mL"},
+        {"label": "Time (hours)", "value": 8, "unit": "hours"},
+        {"label": "Drop factor (gtt/mL)", "value": 15, "unit": "gtt/mL"}
+      ],
+      "question": "Calculate the IV drip rate in drops per minute (gtt/min).",
+      "correct_answer": 31,
+      "answer_unit": "gtt/min",
+      "formula": "gtt/min = (Volume × Drop factor) / (Time × 60)",
+      "hint": "gtt/min = (1000 × 15) / (8 × 60) = 15000 / 480 = 31.25 → round down to 31 gtt/min"
+    },
+    {
+      "id": 2,
+      "title": "Powder Reconstitution",
+      "description": "You have a vial of Ceftriaxone 1g powder. Inject 10mL of sterile water to reconstitute to 100mg/mL. Calculate the volume needed for a 250mg dose.",
+      "inputs": [
+        {"label": "Vial strength", "value": 1000, "unit": "mg"},
+        {"label": "Diluent volume", "value": 10, "unit": "mL"},
+        {"label": "Final concentration", "value": 100, "unit": "mg/mL"},
+        {"label": "Desired dose", "value": 250, "unit": "mg"}
+      ],
+      "question": "How many mL should you withdraw for a 250mg dose?",
+      "correct_answer": 2.5,
+      "answer_unit": "mL",
+      "formula": "mL = Desired dose / Concentration = 250 / 100",
+      "hint": "250mg ÷ 100mg/mL = 2.5mL"
+    },
+    {
+      "id": 3,
+      "title": "Alligation (Two Concentrations)",
+      "description": "You have 70% alcohol and 40% alcohol. Need 500mL of 50% alcohol. Calculate the volumes needed.",
+      "inputs": [
+        {"label": "Higher concentration", "value": 70, "unit": "%"},
+        {"label": "Lower concentration", "value": 40, "unit": "%"},
+        {"label": "Target concentration", "value": 50, "unit": "%"},
+        {"label": "Final volume", "value": 500, "unit": "mL"}
+      ],
+      "question": "How many mL of 70% alcohol and 40% alcohol are needed?",
+      "correct_answer": "333,167",
+      "answer_unit": "mL",
+      "formula": "Parts of higher = target - lower; Parts of lower = higher - target; Volume higher = (parts higher / total parts) × final volume",
+      "hint": "70%: 50-40=10 parts; 40%: 70-50=20 parts; Total=30 parts → 70%: (10/30)×500 = 166.67mL; 40%: (20/30)×500 = 333.33mL"
+    },
+    {
+      "id": 4,
+      "title": "Pediatric Weight-Based Dosing",
+      "description": "A 6-year-old child weighs 22kg. Order: Amoxicillin 40mg/kg/day divided BID. Calculate the single dose.",
+      "inputs": [
+        {"label": "Weight", "value": 22, "unit": "kg"},
+        {"label": "Daily dose per kg", "value": 40, "unit": "mg/kg/day"},
+        {"label": "Times per day", "value": 2, "unit": "BID"}
+      ],
+      "question": "What is the single dose in mg?",
+      "correct_answer": 440,
+      "answer_unit": "mg",
+      "formula": "Daily total = weight × daily dose per kg; Single dose = daily total / times per day",
+      "hint": "Daily total = 22 × 40 = 880mg; Single dose = 880 ÷ 2 = 440mg"
+    },
+    {
+      "id": 5,
+      "title": "IV Drip Rate (mcg/kg/min)",
+      "description": "Patient weight: 70kg. Order: Dopamine 5 mcg/kg/min. Solution: 400mg in 250mL D5W. Calculate mL/hour.",
+      "inputs": [
+        {"label": "Weight", "value": 70, "unit": "kg"},
+        {"label": "Order (mcg/kg/min)", "value": 5, "unit": "mcg/kg/min"},
+        {"label": "Solution strength", "value": 400, "unit": "mg"},
+        {"label": "Solution volume", "value": 250, "unit": "mL"}
+      ],
+      "question": "Calculate the IV drip rate in mL/hour.",
+      "correct_answer": 13.1,
+      "answer_unit": "mL/hr",
+      "formula": "mcg/min = weight × dose; mg/min = mcg/min / 1000; mL/min = (mg/min / total mg) × total mL; mL/hr = mL/min × 60",
+      "hint": "Total mcg/min = 70 × 5 = 350 mcg/min; mg/min = 350/1000 = 0.35 mg/min; Concentration = 400mg/250mL = 1.6 mg/mL; mL/min = 0.35/1.6 = 0.21875; mL/hr = 0.21875 × 60 = 13.125 → 13.1 mL/hr"
+    }
+  ],
+  "compounding_tasks": [
+    {
+      "id": "reconstitution",
+      "title": "Virtual Powder Reconstitution",
+      "drug": "Piperacillin/Tazobactam (Zosyn)",
+      "vial_strength": "2.25g",
+      "diluent_choices": ["Sterile Water", "Normal Saline"],
+      "recommended_diluent": "Sterile Water",
+      "diluent_volume": 10,
+      "final_concentration": 225,
+      "unit": "mg/mL"
+    },
+    {
+      "id": "alligation",
+      "title": "Alligation Calculator",
+      "description": "Mix two concentrations to achieve target strength",
+      "formula_type": "alligation",
+      "units": "%"
+    },
+    {
+      "id": "iv_pump",
+      "title": "IV Pump Simulator",
+      "description": "Program a smart IV pump with safety limits",
+      "drugs": ["Heparin", "Insulin", "Potassium Chloride", "Dopamine", "Nitroglycerin"],
+      "safety_limits": {
+        "Potassium Chloride": "Max rate 10 mEq/hour",
+        "Insulin": "Concentration must be 1 unit/mL for IV push",
+        "Heparin": "Standard concentration 25,000 units/250mL"
+      }
+    }
+  ],
+  "safety_warnings": [
+    {
+      "drug": "Potassium Chloride",
+      "warning": "NEVER IV push undiluted. Max infusion rate 10 mEq/hour. Requires central line for concentrations >20 mEq/100mL.",
+      "severity": "HIGH"
+    },
+    {
+      "drug": "Insulin",
+      "warning": "IV push only for hyperkalemia with cardiac monitoring. Never use insulin syringe for IV push. Concentration errors are FATAL.",
+      "severity": "HIGH"
+    },
+    {
+      "drug": "Heparin",
+      "warning": "Double-check concentration (units/mL). Bolus vs infusion errors cause bleeding or clotting.",
+      "severity": "HIGH"
+    },
+    {
+      "drug": "Dopamine",
+      "warning": "Extravasation causes tissue necrosis. Verify weight-based dose. Do not mix with alkaline solutions.",
+      "severity": "MEDIUM"
+    },
+    {
+      "drug": "Magnesium Sulfate",
+      "warning": "Respiratory depression risk if given too rapidly. Maximum infusion rate 1g/hour for obstetrics.",
+      "severity": "HIGH"
+    }
+  ],
+  "formulas": [
+    {
+      "name": "IV Drip Rate (gtt/min)",
+      "formula": "gtt/min = (Volume × Drop factor) / (Time × 60)",
+      "example": "1000mL over 8 hours, drop factor 15 → (1000 × 15) / (8 × 60) = 31 gtt/min",
+      "category": "IV Flow"
+    },
+    {
+      "name": "Reconstitution Dose Volume",
+      "formula": "mL = Desired dose (mg) / Concentration (mg/mL)",
+      "example": "250mg dose, concentration 100mg/mL → 2.5mL",
+      "category": "Compounding"
+    },
+    {
+      "name": "Alligation Method",
+      "formula": "Higher% parts = target% - lower%; Lower% parts = higher% - target%",
+      "example": "70% and 40% to make 50% → parts: 10 (70%) and 20 (40%) → ratio 1:2",
+      "category": "Compounding"
+    },
+    {
+      "name": "Weight-Based Dosing (mg/kg/day)",
+      "formula": "Single dose = (Weight × Daily dose per kg) / Times per day",
+      "example": "22kg × 40mg/kg/day ÷ 2 BID = 440mg",
+      "category": "Pediatrics"
+    },
+    {
+      "name": "IV Drip Rate (mcg/kg/min to mL/hr)",
+      "formula": "mL/hr = (Weight × Dose (mcg) × 60 × Total mL) / (Total mcg × 1000)",
+      "example": "70kg, 5 mcg/kg/min, 400mg/250mL → 13.1 mL/hr",
+      "category": "IV Flow"
+    },
+    {
+      "name": "Body Surface Area (BSA)",
+      "formula": "BSA (m²) = √(Height(cm) × Weight(kg) / 3600)",
+      "example": "170cm, 70kg → √(170×70/3600) = √(11900/3600) = √3.31 = 1.82 m²",
+      "category": "Clinical"
+    }
+  ]
+}
